@@ -22,13 +22,13 @@ void    ft_free_matrix(char ***out_adrr);
 
 //environement
 char    **mini_setenv(char *var, char *str_val, char **envp, int size_n);
-
+char    *mini_getenv(char *var, char **envp, int size_n);
 
 
 
 //libft
 int     ft_strchr_i(const char *s, int c);
-
+char	*ft_substr(char const *s, unsigned int start, size_t len);
 
 
 #endif

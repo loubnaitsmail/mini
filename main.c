@@ -5,15 +5,45 @@ static t_prompt init_variables(t_prompt prompt, char *str_cmd, char **argv, char
     printf("Init_variable\n");
     char    *num;
     
-    //PWD with getcwd, récupére le répertoire actuel dans envp
+    //Get PWD with getcwd, répertoire actuel dans envp
     str_cmd = getcwd(NULL, 0);
     printf("getcwd = %s\n", str_cmd);
+    //Set PWD in prompt.envp to actuel repo
     prompt.envp = mini_setenv("PWD", str_cmd, prompt.envp, 3);
+    printf("str_cmd PWD = %s\n", str_cmd);
     free(str_cmd);
 
-    //
-    //str_cmd = mini_getenv("SHLVL", envp, 5);
+    //Get SHLVL shell levels from envp
+    str_cmd = mini_getenv("SHLVL", envp, 5);
+    printf("str_cmd SHLVL = %s\n", str_cmd);
+    if (!str_cmd || ft_atoi(str_cmd) <= 0)
+        num = ft_strdup("1");
+    else
+        num = ft_itoa(ft_atoi(str_cmd) + 1); //pk + 1
+    printf("num = %s\n", num);
+    free (str_cmd);
+    //Set SHLVL in prompt.envp to + 1
+    prompt.envp = mini_setenv("SHLVL", num, prompt.envp, 5);
+    free(num);
 
+    //Get PATH, directories to find a commands
+    str_cmd = mini_getenv("PATH", prompt.envp, 4);
+    //Set Path in prompt.envp if NULL 
+    if (!str_cmd)
+        prompt.envp = mini_setenv("PATH", \
+        "/usr/local/sbin:/usr/local/bin:/usr/bin:/bin", prompt.envp, 5);
+    printf("str_cmd PATH = %s\n", str_cmd);
+    free (str_cmd);
+
+    //GET "_" ??
+    str_cmd = mini_getenv("_", prompt.envp, 4);
+    printf("str_cmd '_' = %s\n", str_cmd);
+    //GET "_" if NULL
+    if (!str_cmd)
+        prompt.envp = mini_setenv("_", argv[0], prompt.envp, 1);
+    printf("argv[0] = %s\n", argv[0]);
+    printf("str_cmd '_' = %s\n", str_cmd);
+    free (str_cmd);
 
     return (prompt);
 }
@@ -52,7 +82,7 @@ static t_prompt init_prompt(char **argv, char **envp)
 
     str = NULL;
     prompt.cmds = NULL;
-    //get env 
+    //Get env 
     prompt.envp = ft_dup_matrix(envp);
     prompt.status = 0;
     //init process 
@@ -68,5 +98,7 @@ int main(int argc, char **argv, char **envp)
     t_prompt    prompt;
 
     prompt = init_prompt(argv, envp);
+
+    
 
 }
