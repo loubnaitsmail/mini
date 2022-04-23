@@ -68,4 +68,5 @@ t_list			*ft_lstmap(t_list *lst, void *(*f)(void *),
 					void (*del)(void *));
 int				ft_abs(int i);
 int				r_get_next_line(char **line);
+char			*get_next_line(int fd);
 #endif

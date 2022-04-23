@@ -1,102 +1,92 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: litsmail <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/01 18:21:05 by litsmail          #+#    #+#             */
-/*   Updated: 2021/10/03 19:58:09 by litsmail         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "get_next_line.h"
 
-#define BUFFER_SIZE 420
-
-int	contain(char *str, char c)
+char	*get_next_line(int fd)
 {
-	int	i;
+	static char	*buf[4096];
+	char		*line;
+	size_t		old_len;
 
-	i = 0;
-	while (str[i])
+	if (fd < 0 || fd > 4095 || BUFFER_SIZE < 0)
+		return (NULL);
+	line = NULL;
+	if (gnl_strchr_i(buf[fd], '\n') == -1)
 	{
-		if (str[i] == c)
-			return (i);
-		i++;
+		old_len = gnl_strlen(buf[fd]);
+		buf[fd] = gnl_expand_buffer(buf[fd], fd);
+		if (old_len == gnl_strlen(buf[fd]) && buf[fd])
+			line = gnl_substr(buf[fd], 0, gnl_strlen(buf[fd]));
 	}
-	return (-1);
+	if (!buf[fd])
+		return (NULL);
+	if (!line && gnl_strchr_i(buf[fd], '\n') != -1)
+		line = gnl_substr(buf[fd], 0, gnl_strchr_i(buf[fd], '\n') + 1);
+	if (line)
+	{
+		buf[fd] = gnl_shrink_buffer(buf[fd], line);
+		return (line);
+	}
+	return (get_next_line(fd));
 }
 
-int	separate(char **line, char *save_buf, int index)
+char	*gnl_shrink_buffer(char *buf, char *line)
 {
-	int	i;
+	char	*newbuf;
+	int		line_len;
 
-	*line = ft_memalloc(index + 1);
-	i = -1;
-	while (++i < index)
-		line[0][i] = save_buf[i];
-	ft_strcpy(save_buf, &save_buf[index + 1]);
-	return (1);
+	if (!buf || !line)
+		return (buf);
+	line_len = gnl_strlen(line);
+	if ((int)gnl_strlen(buf) == line_len)
+	{
+		free(buf);
+		return (NULL);
+	}
+	newbuf = gnl_substr(buf, line_len, gnl_strlen(buf) - line_len);
+	free(buf);
+	return (newbuf);
 }
 
-int	read_last(char **line, char *save_buf)
+char	*gnl_expand_buffer(char *buf, int fd)
 {
-	int	res;
+	char	*newbuf;
+	int		newlen;
+	char	*aux;
 
-	res = 0;
-	if (save_buf != NULL)
+	aux = gnl_newread(fd);
+	if (!aux)
+		return (NULL);
+	if (!aux[0])
 	{
-		if (contain(save_buf, '\n') != -1)
-			return (separate(line, save_buf, contain(save_buf, '\n')));
-		else
-		{
-			*line = ft_memalloc(ft_strlen(save_buf) + 1);
-			*line = ft_strcpy(*line, save_buf);
-			res = 2;
-		}
+		free(aux);
+		return (buf);
 	}
-	if (*line == NULL)
-		*line = ft_memalloc(1);
-	return (res);
+	if (!buf)
+		return (aux);
+	newlen = gnl_strlen(buf) + gnl_strlen(aux);
+	newbuf = malloc(newlen + 1);
+	if (!newbuf)
+		return (NULL);
+	gnl_strlcpy(newbuf, buf, newlen + 1);
+	gnl_strlcat(newbuf, aux, newlen + 1);
+	free(buf);
+	free(aux);
+	return (newbuf);
 }
 
-int	read_func(int fd, char **line, int res)
+char	*gnl_newread(int fd)
 {
-	long long int	size_buf;
-	static char		*save_buf;
-	static char		buf[BUFFER_SIZE + 1];
+	char	*aux;
+	int		nbytes;
 
-	size_buf = read(fd, buf, BUFFER_SIZE);
-	while (size_buf > 0)
+	aux = malloc(BUFFER_SIZE + 1);
+	if (!aux)
+		return (NULL);
+	nbytes = read(fd, aux, BUFFER_SIZE);
+	if (nbytes < 0)
 	{
-		buf[size_buf] = '\0';
-		if (save_buf == NULL)
-			save_buf = ft_memalloc(size_buf + 1);
-		else if (save_buf != NULL)
-			save_buf = ft_realloc(save_buf, size_buf + ft_strlen(save_buf) + 1);
-		ft_strcat(save_buf, buf);
-		if (contain(save_buf, '\n') != -1)
-			return (separate(line, save_buf, contain(save_buf, '\n')));
+		free(aux);
+		return (NULL);
 	}
-	res = read_last(line, save_buf);
-	if (res == 2)
-	{
-		free(save_buf);
-		save_buf = NULL;
-		return (0);
-	}
-	return (res);
-}
-
-int	get_next_line(const int fd, char **line)
-{
-	int		res;
-	char	buf_valid[BUFFER_SIZE + 1];
-
-	res = 0;
-	if (fd < 0 || !line || read(fd, buf_valid, 0) == -1 || BUFFER_SIZE <= 0)
-		return (-1);
-	*line = NULL;
-	return (read_func(fd, line, res));
+	aux[nbytes] = '\0';
+	return (aux);
 }

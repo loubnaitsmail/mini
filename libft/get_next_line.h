@@ -1,31 +1,42 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: litsmail <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/01 18:21:05 by litsmail          #+#    #+#             */
-/*   Updated: 2021/01/21 17:07:07 by litsmail         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef GET_NEXT_LINE_H
 
 # define GET_NEXT_LINE_H
+
 # include <unistd.h>
 # include <stdlib.h>
+# include <fcntl.h>
 
-int		contain(char *str, char c);
-int		separate(char **line, char *save_buf, int index);
-int		read_last(char **line, char *save_buf);
-int		read_func(int fd, char **line, int res);
-int		get_next_line(const int fd, char **line);
-char	*ft_realloc(char *ptr, size_t new_size);
-char	*ft_strcpy(char *dest, char *src);
-size_t	ft_strlen(const char *src);
-char	*ft_strdup(const char *s1);
-char	*ft_memalloc(size_t n);
-char	*ft_strcat(char *dest, char *src);
+# ifndef BUFFER_SIZE
+
+#  define BUFFER_SIZE 42
+
+# endif
+
+/* Retrieves next line from given file descriptor */
+char	*get_next_line(int fd);
+
+/* Returns length of a string */
+size_t	gnl_strlen(const char *s);
+
+/* Retrieves index of first appearance of i in s, or -1 */
+int		gnl_strchr_i(const char *s, int c);
+
+/* Copies chars from src to dst ensuring null-termination */
+size_t	gnl_strlcpy(char *dst, const char *src, size_t size);
+
+/* Allocates enough memory to make a copy of s from start, copying len bytes */
+char	*gnl_substr(char const *s, unsigned int start, size_t len);
+
+/* Concatenates two strings, ensuring null-termination */
+size_t	gnl_strlcat(char *dst, const char *src, size_t size);
+
+/* Removes line from the static variable buf */
+char	*gnl_shrink_buffer(char *buf, char *line);
+
+/* Performs a new read and adds it to static variable buf */
+char	*gnl_expand_buffer(char *buf, int fd);
+
+/* Performs a new read and returns read string */
+char	*gnl_newread(int fd);
 
 #endif

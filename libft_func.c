@@ -48,3 +48,59 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	ft_strlcpy(substr, s, len + 1);
 	return (substr);
 }
+
+char	*ft_strtrim(char const *s1, char const *set)
+{
+	int	len;
+	int	i;
+	int	j;
+
+	if (!s1)
+		return (0);
+	len = ft_strlen(s1);
+	i = 0;
+	j = len - 1;
+	while (i <= len / 2 && ft_strchr(set, s1[i]) != NULL)
+		i++;
+	while (j >= len / 2 && ft_strchr(set, s1[j]) != NULL)
+		j--;
+	if (i > j)
+		return (ft_strdup(""));
+	len = j - i;
+	return (ft_substr(s1, i, len + 1));
+}
+
+char *ft_strcpy(char *dest, char *src)
+{
+	int i;
+
+	i = 0;
+	while (src[i] != '\0')
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
+int	ft_strchars_i(const char *s, char *set)
+{
+	printf("ft_strchar_i s = %s, set = %s\n", s, set);
+	int				i;
+
+	i = 0;
+	if (!s)
+		return (-1);
+	while (s[i] != '\0')
+	{
+		if (ft_strchr(set, s[i]))
+		{
+			printf("retun i = %d\n", i);
+			return (i);
+		}
+		i++;
+	}
+	printf("retun -1\n");
+	return (-1);
+}	
