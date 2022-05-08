@@ -2,8 +2,9 @@
 
 static int	ft_count_words(const char *s, char *c) //str, sep, count[Ø]*
 {
-    printf("ft_count_words str = %s, sep c = %s\n", s, c);
-    //i[0] = pos caracter, i[1] = nbr words
+    printf("///ft_count_words str = %s, sep c = %s\n", s, c);
+    //i[0] = position caracter
+	//i[1] = nbr words
     //q[0] = 0, q[1] = 0 -> pas de quote OU quote fermé % 2
     //q[0] = 1, q[1] != 0 -> une quote ouverte
 	int		q[2]; //quotes
@@ -47,8 +48,11 @@ static int	ft_count_words(const char *s, char *c) //str, sep, count[Ø]*
 
 static char	**ft_fill_array(char **aux, char const *s, char *set) //i[3]*
 {
-    printf("ft_fill_array\n");
-    //i[0] = pos caractère, i[1] = pos next word befor space, i[2] = nbr words
+    printf("///**ft_fill_array\n");
+    //i[0] = pos caractère
+	//i[1] = pos next word befor space
+	//i[2] = nbr words
+
 	int		s_len;
     int		i[3]; //pos
 	int		q[2]; //quotes
@@ -97,7 +101,7 @@ static char	**ft_fill_array(char **aux, char const *s, char *set) //i[3]*
 
 char	**ft_cmdtrim(char const *s, char *set) //str, seprateur 
 {
-    printf("**ft_cmtrim str = %s, sep = %s\n", s, set);
+    printf("///**ft_cmtrim str = %s, sep = %s\n", s, set);
 
 	char	**aux; //**array
 	int		nwords;
@@ -129,7 +133,7 @@ char	**ft_cmdtrim(char const *s, char *set) //str, seprateur
     
     int j = -1;
     while(++j < nwords)
-        printf("filled_tab_space[%d] = %s\n", j, aux[j]);
-
+        printf("1_Split_By_Space[%d] = %s\n", j, aux[j]);
+	printf("\n");
 	return (aux);
 }

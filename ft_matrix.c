@@ -7,13 +7,16 @@ int ft_matrixlen(char **envp)
     i = 0;
     while (envp && envp[i])
     {
+         //printf("ft_matrix_len > envp[i] = %s\n", envp[i]);
         i++;
     }
+    //printf("///matrix_len = %d\n", i);
     return (i);
 }
 
 void    ft_free_matrix(char ***out_adrr)
 {
+    //printf("ft_free_matrix\n");
     int i;
 
     i = 0;
@@ -32,6 +35,7 @@ void    ft_free_matrix(char ***out_adrr)
 
 char    **ft_dup_matrix(char **envp)
 {
+    printf("///**ft_dup_matrix\n");
     char    **out;
     int     nbr_rows;
     int     i;
@@ -60,7 +64,7 @@ char    **ft_dup_matrix(char **envp)
 
 char    **ft_extend_matrix(char **in_envp, char *new_str)
 {
-    printf("Extand_Matrix\n");
+    printf("///Extand_Matrix\n");
     char    **out;
     int     len;
     int     i;
@@ -70,7 +74,7 @@ char    **ft_extend_matrix(char **in_envp, char *new_str)
     if (!new_str)
         return (in_envp);
     len  = ft_matrixlen(in_envp);
-    out = malloc(sizeof(char *) * (len + 1));
+    out = malloc(sizeof(char *) * (len + 2));
     out[len + 1] = NULL;
     if (!out)
         return (in_envp);
@@ -93,6 +97,7 @@ char    **ft_extend_matrix(char **in_envp, char *new_str)
 
 char	**ft_matrix_replace_in(char ***big, char **small, int n)
 {
+    printf("///**ft_replace_matrix i = %d\n", n);
 	char	**aux;
 	int		i[3];
 

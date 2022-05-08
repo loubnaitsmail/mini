@@ -1,7 +1,13 @@
 #include "minishell.h"
 
-static int	ft_count_words(char *s, char *set, int count)
+static int	ft_count_words(char *s, char *set, int count) //i
 {
+	//count[0] = position caracter
+	//count[1] = nbr words
+	//count[1] = nbr words
+    //q[0] = 0, q[1] = 0 -> pas de quote OU quote fermé % 2
+    //q[0] = 1, q[1] != 0 -> une quote ouverte
+
 	int		q[2];
 	int		i;
 
@@ -11,15 +17,17 @@ static int	ft_count_words(char *s, char *set, int count)
 	while (s && s[i] != '\0')
 	{
 		count++;
-		if (!ft_strchr(set, s[i]))
+		if (!ft_strchr(set, s[i])) //tant qu'il n'a pas trouvé de set
 		{
 			while ((!ft_strchr(set, s[i]) || q[0] || q[1]) && s[i] != '\0')
 			{
-				q[0] = (q[0] + (!q[1] && s[i] == '\'')) % 2;
+				q[0] = (q[0] + (!q[1] && s[i] == '\'')) % 2; //égale à 1 tant qu'il n'a pas trouvé la deuxième quote et 2%2=0 s'il trouve la 2ème quote
+                //printf("q[O] = %d\n", q[0]);
 				q[1] = (q[1] + (!q[0] && s[i] == '\"')) % 2;
+				//printf("q[1] = %d\n", q[1]);
 				i++;
 			}
-			if (q[0] || q[1])
+			if (q[0] || q[1]) //n'a pas trouvé la deuxième quote 
 				return (-1);
 		}
 		else
@@ -30,6 +38,10 @@ static int	ft_count_words(char *s, char *set, int count)
 
 static char	**ft_fill_array(char **aux, char *s, char *set, int i[3])
 {
+	printf("ft_fill_array\n");
+    //i[0] = pos caractère
+	//i[1] = pos next word befor space
+	//i[2] = nbr words
 	int		q[2];
 
 	q[0] = 0;
@@ -55,7 +67,7 @@ static char	**ft_fill_array(char **aux, char *s, char *set, int i[3])
 
 char	**ft_cmdsubsplit(char const *s, char *set)
 {
-    printf("**ft_cmdsubsplit s = %s, set = %s\n", s, set);
+    printf("///**ft_cmdsubsplit s = %s, set = %s\n", s, set);
 	char	**aux;
 	int		nwords;
 	int		i[3];
@@ -76,9 +88,11 @@ char	**ft_cmdsubsplit(char const *s, char *set)
 	aux = ft_fill_array(aux, (char *)s, set, i);
 	aux[nwords] = NULL;
 
+	//print returned aux
     int j = -1;
     while(++j < nwords)
-        printf("aux_<|>[%d] = %s\n", j, aux[j]);
+        printf("2_Splited_tab_<|>[%d] = %s\n", j, aux[j]);
+	printf("\n");
 
 	return (aux);
 }

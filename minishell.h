@@ -2,6 +2,7 @@
 # define MINISHELL_H
 
 # include <stdio.h>
+# include <fcntl.h>
 # include "libft/libft.h"
 # include <sys/types.h>
 # include <readline/readline.h>
@@ -75,10 +76,30 @@ char	**ft_cmdsubsplit(char const *s, char *set);
 //static char	**ft_fill_array(char **aux, char *s, char *set, int i[3]);
 //static int	ft_count_words(char *s, char *set, int count);
 
-
 //expand
 char	*expand_path(char *str, int i, int quotes[2], char *var);
-char	*expand_vars(char *str, int i, int quotes[2], t_prompt *prompt);
+char	*expand_vars(char *str, t_prompt *prompt);
 static char	*get_substr_var(char *str, int i, t_prompt *prompt);
+
+//fill node
+t_list	*fill_nodes(char **args, int i);
+
+//strim all
+char	*ft_strtrim_all(char const *s1, int squote, int dquote);
+
+//list
+t_list	*ft_lstlast(t_list *lst);
+void	ft_lstadd_back(t_list **lst, t_list *newnode);
+t_list	*ft_lstnew(void *content);
+void	ft_lstclear(t_list **lst, void (*del)(void*));
+int	ft_lstsize(t_list *lst);
+
+//get_params infile, outfile, full_path
+//int	get_fd(int oldfd, char *path, int flags[2]);
+t_mini	*get_outfile1(t_mini *node, char **args, int *i);
+t_mini	*get_outfile2(t_mini *node, char **args, int *i);
+t_mini	*get_infile1(t_mini *node, char **args, int *i);
+t_mini	*get_infile2(t_mini *node, char **args, int *i);
+
 
 #endif

@@ -4,7 +4,7 @@
 
 static char	**split_all(char **args, t_prompt *prompt) //array_arg, prompt
 {
-    printf("\nsplit_all args\n");
+    printf("///**split_all args\n");
 
 	char	**subsplit;
 	int		i;
@@ -13,21 +13,21 @@ static char	**split_all(char **args, t_prompt *prompt) //array_arg, prompt
 	i = -1;
 	while (args && args[++i])
 	{
-        printf("\nwhile args = %s\n", args[i]);
-		args[i] = expand_vars(args[i], -1, quotes, prompt); //var start $
-        //printf("Var_expend args[%d] = %s\n\n", i, args[i]);
+        printf(">>%d- While args split all = %s\n", i, args[i]);
+		args[i] = expand_vars(args[i], prompt); // $VAR
+        printf("Return_Var_Exp_args[%d] = %s\n\n", i, args[i]);
 
-		//args[i] = expand_path(args[i], -1, quotes, mini_getenv("HOME", prompt->envp, 4));
-        //printf("Path_expand args[%d] = %s\n\n", i, args[i]);
+		args[i] = expand_path(args[i], -1, quotes, mini_getenv("HOME", prompt->envp, 4)); // ~/src
+        printf("Return_Path_Exp_args[%d] = %s\n\n", i, args[i]);
 
-		//subsplit = ft_cmdsubsplit(args[i], "<|>");
+		subsplit = ft_cmdsubsplit(args[i], "<|>");
 
-		//ft_matrix_replace_in(&args, subsplit, i);
+		ft_matrix_replace_in(&args, subsplit, i);
+		
+		i += ft_matrixlen(subsplit) - 1;
+        printf("i += matrixlen = %d\n", i);
 
-		//i += ft_matrixlen(subsplit) - 1;
-        //printf("i += matrixlen = %d\n", i);
-
-		//ft_free_matrix(&subsplit);
+		ft_free_matrix(&subsplit);
 	}
 
     //int j = -1;
@@ -44,21 +44,20 @@ static void	*parse_args(char **args, t_prompt *p) //array_args, prompt
 
 	is_exit = 0;
 	
-    args = split_all(args, p); //expand var and path 
-
     //int j = -1;
     //while(++j < 4)
         //printf("Split_all args[%d] = %s\n", j, args[j]);
 
-    /*p->cmds = fill_nodes(split_all(args, p), -1);
+    p->cmds = fill_nodes(split_all(args, p), -1); //expand var and path and split "<|>", enlever les quotes et fill node
     
 	if (!p->cmds)
 		return (p);
 
 	i = ft_lstsize(p->cmds);
+	printf("i_list_size = %d\n", i);
 
-	g_status = builtin(p, p->cmds, &is_exit, 0);
-	while (i-- > 0)
+	//g_status = builtin(p, p->cmds, &is_exit, 0);
+	/*while (i-- > 0)
 		waitpid(-1, &g_status, 0);
 	if (!is_exit && g_status == 13)
 		g_status = 0;
@@ -82,7 +81,7 @@ void	*check_args(char *out, t_prompt *p) //out_readline //prompts
 		printf("exit\n");
 		return (NULL);
 	}
-    //history
+    //add to history
 	if (out[0] != '\0')
 		add_history(out);
 

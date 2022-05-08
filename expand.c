@@ -2,7 +2,7 @@
 
 char	*expand_path(char *str, int i, int quotes[2], char *var)
 {
-    printf("Path_expand str = %s, var = %s\n", str, var);
+    printf("/////Path_expand str = %s, var = %s\n", str, var);
 	char	*path;
 	char	*aux;
 
@@ -14,29 +14,33 @@ char	*expand_path(char *str, int i, int quotes[2], char *var)
 		quotes[1] = (quotes[1] + (!quotes[0] && str[i] == '\"')) % 2;
         //printf("0_quotrs[0] = %d\n", quotes[0]);
         //printf("0_quotrs[1] = %d\n", quotes[1]);
+        //pas de quote " ET pas de quote ' ET contient ~ ET (first element OR not after apres $)
+		//il faut un "~/src"
 		if (!quotes[0] && !quotes[1] && str[i] == '~' && \
              (i == 0 || str[i - 1] != '$'))
 		{
-            printf("quotrs[0] = %d\n", quotes[0]);
-            printf("quotrs[1] = %d\n", quotes[1]);
+            //printf("quotrs[0] = %d\n", quotes[0]);
+            //printf("quotrs[1] = %d\n", quotes[1]);
+            //printf("i = %d, str[i - 1] = %c\n]", i, str[i-1]);
+
 			aux = ft_substr(str, 0, i);
-            printf("Path aux = %s\n", aux);
+            //printf("Path aux = %s\n", aux);
 
 			path = ft_strjoin(aux, var);
-            printf("Path path = %s\n", path);
+            //printf("Path path = %s\n", path);
 
 			free(aux);
 			aux = ft_substr(str, i + 1, ft_strlen(str));
-            printf("Path aux substr = %s\n", aux);
+            //printf("Path aux substr = %s\n", aux);
 
 			free(str);
 			str = ft_strjoin(path, aux);
-            printf("Path str = %s\n", str);
+            //printf("Path str = %s\n", str);
 
 			free(aux);
 			free(path);
-            printf("BAAAACKKK PATH\n");
-			return (expand_path(str, i + ft_strlen(var) - 1, quotes, var));
+			//return (expand_path(str, i + ft_strlen(var) - 1, quotes, var));
+            return (str);
 		}
 	}
 	free(var);
@@ -46,7 +50,7 @@ char	*expand_path(char *str, int i, int quotes[2], char *var)
 
 static char	*get_substr_var(char *str, int i, t_prompt *prompt) //arg //Get $VAR
 {
-    printf("Get_substr_var arg = %s, i = %d\n", str, i);
+    printf("////*get_substr_var arg = %s, i = %d\n", str, i);
 	char	*aux;
 	int		pos;
 	char	*path;
@@ -60,7 +64,7 @@ static char	*get_substr_var(char *str, int i, t_prompt *prompt) //arg //Get $VAR
     //printf("last pos = %d\n", pos);
 
 	aux = ft_substr(str, 0, i - 1); //stocker ce qu'il y a avant $, ex le 1er "
-    //printf("aux_substr i-1(%d )= %s\n", i-1, aux);
+    //printf("aux_substr i-1(%d)= %s\n", i-1, aux);
 
 	var = mini_getenv(&str[i], prompt->envp, ft_strchars_i(&str[i], "\"\'$|>< ")); //get_var, env, size_n = str jusqu'au 2ème " ou set, return null if not found
     //printf("var_getenv = %s\n", var);
@@ -71,8 +75,11 @@ static char	*get_substr_var(char *str, int i, t_prompt *prompt) //arg //Get $VAR
 		var = ft_itoa(prompt->pid);
         printf("itoa var ? = %s\n", var);
     }
-	//else if (!var && str[i] == '?')
+	else if (!var && str[i] == '?')
+    {
+        printf("itoa g_status = %s\n", var);
 		//var = ft_itoa(g_status);
+    }
 
 	path = ft_strjoin(aux, var); //ajouter l'avant & stocké dans aux, ex : " 
 	free(aux);
@@ -88,9 +95,13 @@ static char	*get_substr_var(char *str, int i, t_prompt *prompt) //arg //Get $VAR
 	return (aux);
 }
 
-char	*expand_vars(char *str, int i, int quotes[2], t_prompt *prompt) //arg, i, quotes[2], prompt
+char	*expand_vars(char *str, t_prompt *prompt) //arg, i, quotes[2], prompt
 {
-    printf("Var_expend, str = %s\n", str);
+    printf("///Var_expend, str = %s\n", str);
+    int		quotes[2];
+    int		i;
+
+	i = -1;
 	quotes[0] = 0;
 	quotes[1] = 0;
 	while (str && str[++i]) //parcourir l'argument 
@@ -98,7 +109,6 @@ char	*expand_vars(char *str, int i, int quotes[2], t_prompt *prompt) //arg, i, q
         //printf("while str[%d] = %s\n", i, str);
 		quotes[0] = (quotes[0] + (!quotes[1] && str[i] == '\'')) % 2; //quote ' 0 if not, 1 if contient
         //printf("-quotrs[0] = %d\n", quotes[0]);
-
 		quotes[1] = (quotes[1] + (!quotes[0] && str[i] == '\"')) % 2; //quote " 0 if not, 1 if contient
         //printf("-quotrs[1] = %d\n", quotes[1]);
 
@@ -109,9 +119,9 @@ char	*expand_vars(char *str, int i, int quotes[2], t_prompt *prompt) //arg, i, q
         {
             //printf("quotrs[0] = %d\n", quotes[0]);
             //printf("quotrs[1] = %d\n", quotes[1]); 
+
             str = get_substr_var(str, ++i, prompt); //put value from env
             //printf("substr = %s\n", str);
-            //printf("BAAAACKKK ENV\n");
 			//return (expand_vars(str, -1, quotes, prompt)); //enlever la récusivitée 
             return(str);
         }
