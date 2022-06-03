@@ -38,7 +38,6 @@ static int	ft_count_words(char *s, char *set, int count) //i
 
 static char	**ft_fill_array(char **aux, char *s, char *set, int i[3])
 {
-	printf("ft_fill_array\n");
     //i[0] = pos caractère
 	//i[1] = pos next word befor space
 	//i[2] = nbr words
@@ -65,9 +64,9 @@ static char	**ft_fill_array(char **aux, char *s, char *set, int i[3])
 	return (aux);
 }
 
-char	**ft_cmdsubsplit(char const *s, char *set)
+char	**ft_cmdsubsplit(char const *s, char *set) 
 {
-    printf("///**ft_cmdsubsplit s = %s, set = %s\n", s, set);
+    printf("///SPLIT %s **ft_cmdsubsplit\n", set);
 	char	**aux;
 	int		nwords;
 	int		i[3];
@@ -90,8 +89,9 @@ char	**ft_cmdsubsplit(char const *s, char *set)
 
 	//print returned aux
     int j = -1;
+	printf("\n");
     while(++j < nwords)
-        printf("2_Splited_tab_<|>[%d] = %s\n", j, aux[j]);
+        printf("Splited_by_<|>[%d] = %s\n", j, aux[j]);
 	printf("\n");
 
 	return (aux);

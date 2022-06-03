@@ -24,7 +24,7 @@ static t_list	*stop_fill(t_list *cmds, char **args, char **temp)
 	return (NULL);
 }
 
-//gérer les redirection < > << >>  et pip |
+//extend matrix with params and gérer les redirection < > << >>  et pip |
 static t_mini	*get_params(t_mini *node, char **a[2], int *i) //cmd[1](mini) , temp[1] = trimed, temp[0] = args, i
 {
     //**a[2]
@@ -49,6 +49,7 @@ static t_mini	*get_params(t_mini *node, char **a[2], int *i) //cmd[1](mini) , te
 			//mini_perror(PIPENDERR, NULL, 2);
 			*i = -2;
 		}
+        //printf("infile = %d, outfile = %d, full_cmd = %s, full_path = %s\n", node->infile, node->outfile, *node->full_cmd, node->full_path);
 		return (node);
 	}
 	//mini_perror(PIPENDERR, NULL, 2);
@@ -101,26 +102,30 @@ t_list	*fill_nodes(char **args, int i)
     printf("\n///fill_nodes, i = %d\n", i);
 	t_list	*cmds[2];
 	char	**temp[2];
-    //temp[0] = args
-    //temp[1] = trimed_arg sans quotes
+    //temp[0] = tab args
+    //temp[1] = tab args whithout quotes
 
 	cmds[0] = NULL;
-	temp[1] = get_trimmed(args); //enlever les quotes
+	temp[1] = get_trimmed(args); //tab args whithout quotes
 	while (args[++i])
 	{
         printf(">>%d - While fill_node_args[%d] = %s\n", i, i, args[i]);
         //printf("while args[%d] = %s\n", i + 1, args[i + 1]);
         //printf("while args[i+1][0] = %d\n", args[i + 1][0]);
-		cmds[1] = ft_lstlast(cmds[0]);
+
+		cmds[1] = ft_lstlast(cmds[0]); //prend le dernier de la list cmd[0]
+
+        //init cmd when i = 0 or | >> ++
 		if (i == 0 || (args[i][0] == '|' && args[i + 1] && args[i + 1][0])) //init list and when |
 		{
-			i += args[i][0] == '|';
+			i += args[i][0] == '|'; //go to next arg if | pip
             printf("i = %d\n", i);
 
-			ft_lstadd_back(&cmds[0], ft_lstnew(mini_init())); //lst, newlist(mini), init cmd[Ø] avec les param de minishell
+			ft_lstadd_back(&cmds[0], ft_lstnew(mini_init())); //lst, newlist(mini), ajoute new_init_list to cmd[Ø] (param de minishell)
 			cmds[1] = ft_lstlast(cmds[0]); //prend le dernier element de la list
-            printf("cmd[1]_init = %s\n", (char*)cmds[1]->content);
+            printf(">>Init_cmd = %d\n", i);
 		}
+
 		temp[0] = args;
         cmds[1]->content = get_params(cmds[1]->content, temp, &i); //cmds[1]->content = node
         
@@ -135,5 +140,6 @@ t_list	*fill_nodes(char **args, int i)
 	}
 	ft_free_matrix(&temp[1]);
 	ft_free_matrix(&args);
+
 	return (cmds[0]);
 }

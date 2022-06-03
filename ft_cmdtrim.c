@@ -2,7 +2,6 @@
 
 static int	ft_count_words(const char *s, char *c) //str, sep, count[Ø]*
 {
-    printf("///ft_count_words str = %s, sep c = %s\n", s, c);
     //i[0] = position caracter
 	//i[1] = nbr words
     //q[0] = 0, q[1] = 0 -> pas de quote OU quote fermé % 2
@@ -17,30 +16,22 @@ static int	ft_count_words(const char *s, char *c) //str, sep, count[Ø]*
 	q[1] = 0;
 	while (s[i[0]] != '\0')
 	{
-        //printf("char s[%d] = %c\n", i[0], s[i[0]]);
-
-		if (!ft_strchr(c, s[i[0]])) //s'il n'est pas un espace
+		if (!ft_strchr(c, s[i[0]])) //s'il ne trouve pas un caratère dans le set
 		{
 			i[1]++;
 			while ((!ft_strchr(c, s[i[0]]) || q[0]) && s[i[0]] != '\0') //tant qu'il n'est pas un espace OU quote ouverte q[0] != 0
 			{
-                //printf("while i[O]++ = %d, q[0] = %d, s[i[0]] = %c\n", i[0], q[0], s[i[0]]);
 				if (!q[1] && (s[i[0]] == '\"' || s[i[0]] == '\'')) //contient " ou ' ET q[1] = 0 -> out of quote et y entre
 					q[1] = s[i[0]]; //ascii 34 = " or 39 = '
 
-				q[0] = (q[0] + (s[i[0]] == q[1])) % 2; //égale à 1 tant qu'il n'a pas trouvé la deuxième quote et 2%2=0 s'il trouve la 2ème quote
-                //printf("q[O] = %d\n", q[0]);
-                
+				q[0] = (q[0] + (s[i[0]] == q[1])) % 2; //égale à 1 tant qu'il n'a pas trouvé la deuxième quote et 2%2=0 s'il trouve la 2ème quote                
 				q[1] *= q[0] != 0; //= 0 when q[0] *= 0
-                //printf("q[1] = %d\n", q[1]);
 				i[0]++;
 			}
 			if (q[0]) //n'a pas trouvé la deuxième quote 
-            {
 				return (-1);
-            }
 		}
-		else //s'il trouve un espace et n'est pas entre quotes ++
+		else //s'il trouve un set et n'est pas entre quotes ++
 			i[0]++;
 	}
 	return (i[1]);
@@ -48,7 +39,6 @@ static int	ft_count_words(const char *s, char *c) //str, sep, count[Ø]*
 
 static char	**ft_fill_array(char **aux, char const *s, char *set) //i[3]*
 {
-    printf("///**ft_fill_array\n");
     //i[0] = pos caractère
 	//i[1] = pos next word befor space
 	//i[2] = nbr words
@@ -67,31 +57,21 @@ static char	**ft_fill_array(char **aux, char const *s, char *set) //i[3]*
 	s_len = ft_strlen(s);
 	while (s[i[0]])
 	{
-        //printf("s[i[0]] = %c\n", s[i[0]]);
 		while (ft_strchr(set, s[i[0]]) && s[i[0]] != '\0') //c'est un espace -> ++
 			i[0]++;
 
 		i[1] = i[0]; //pos after space
-        //printf("i[1] = %d\n", i[1]);
 		while ((!ft_strchr(set, s[i[0]]) || q[0] || q[1]) && s[i[0]]) //tant qu'il n'est pas un espae OU  quote ouverte "0/1 '1/0 OU pas de quote = 0/0
 		{
-            //printf("while i[O] = %d, s[i[0]] = %c, q[0] = %d, q[1] = %d\n", i[0], s[i[0]], q[0], q[1]);
 			q[0] = (q[0] + (!q[1] && s[i[0]] == '\'')) % 2;
-            //printf("q[O] = %d\n", q[0]);
 			q[1] = (q[1] + (!q[0] && s[i[0]] == '\"')) % 2;
-            //printf("q[1] = %d\n", q[1]);
 
 			i[0]++;
 		}
-        //printf("i[0] = %d, i[1] = %d, s_len = %d, i[2] = %d\n", i[0], i[1], s_len, i[2]);
 		if (i[1] >= s_len) //fini, with space
-        {
-            //printf("fini with space\n");
 			aux[i[2]++] = "\0";
-        }
 		else
         {
-            //printf("ft_sub i[0] = %d, i[1] = %d, i[2] = %d\n",  i[0],  i[1], i[2]);
             //fill tab of tab ++
 			aux[i[2]++] = ft_substr(s, i[1], i[0] - i[1]);
         }
@@ -101,24 +81,15 @@ static char	**ft_fill_array(char **aux, char const *s, char *set) //i[3]*
 
 char	**ft_cmdtrim(char const *s, char *set) //str, seprateur 
 {
-    printf("///**ft_cmtrim str = %s, sep = %s\n", s, set);
+    printf("///SPLIT SPACE > ft_cmtrim = %s, sep = '%s'\n", s, set);
 
 	char	**aux; //**array
 	int		nwords;
-	//int		i[3];
-	//int		counts[2]; 
-
-	//i[0] = 0;
-	//i[1] = 0;
-	//i[2] = 0;
-
-	//counts[0] = 0; 
-	//counts[1] = 0; 
 
 	if (!s)
 		return (NULL);
 
-	nwords = ft_count_words(s, set); //counts
+	nwords = ft_count_words(s, set); 
     printf("nwords = %d\n", nwords);
 
 	if (nwords == -1)
@@ -133,7 +104,8 @@ char	**ft_cmdtrim(char const *s, char *set) //str, seprateur
     
     int j = -1;
     while(++j < nwords)
-        printf("1_Split_By_Space[%d] = %s\n", j, aux[j]);
+        printf("Splited_By_Space[%d] = %s\n", j, aux[j]);
 	printf("\n");
+
 	return (aux);
 }

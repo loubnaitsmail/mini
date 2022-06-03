@@ -61,7 +61,7 @@ t_mini	*get_outfile1(t_mini *node, char **args, int *i) //cmd(mini), trimed_args
 		*i = -1;
 		if (node->outfile != -1)
 		{
-			ft_putendl_fd(nl, 2);
+			ft_putendl_fd(nl, 2); //print error
 			g_status = 2;
 		}
 		else
@@ -82,15 +82,15 @@ t_mini	*get_outfile2(t_mini *node, char **args, int *i)
 	(*i)++;
     printf("args[%d] = %s\n", *i, args[*i]);
 	if (args[++(*i)])
-		node->outfile = get_fd(node->outfile, args[*i], flags);
+		node->outfile = get_fd(node->outfile, args[*i], flags); //fill outfile
 
 	if (!args[*i] || node->outfile == -1)
 	{
-        printf("get_out2 cas !args[i] || outfile ==-1\n");
+        printf("get_out2 cas !args[i] || outfile == -1\n");
 		*i = -1;
 		if (node->outfile != -1)
 		{
-			ft_putendl_fd(nl, 2);
+			ft_putendl_fd(nl, 2); //print error
 			g_status = 2;
 		}
 		else
@@ -111,14 +111,15 @@ t_mini	*get_infile1(t_mini *node, char **args, int *i)
 	(*i)++;
     printf("args[%d] = %s\n", *i, args[*i]);
 	if (args[*i])
-		node->infile = get_fd(node->infile, args[*i], flags);
+		node->infile = get_fd(node->infile, args[*i], flags); //fill infile
+
 	if (!args[*i] || node->infile == -1)
 	{
         printf("get_in1 cas !args[i] || outfile ==-1\n");
 		*i = -1;
 		if (node->infile != -1)
 		{
-			ft_putendl_fd(nl, 2);
+			ft_putendl_fd(nl, 2); //print error
 			g_status = 2;
 		}
 		else

@@ -73,3 +73,19 @@ int	ft_lstsize(t_list *lst)
 	}
 	return (size);
 }
+
+int isEmptyList(t_list *lst)
+{
+    return (lst == NULL);
+}
+
+void    printList(t_list *lst)
+{
+    while (!isEmptyList(lst))
+    {
+        printf("list = %s", (char *)lst->content);
+        lst = lst->next;
+    }
+    printf("\n");
+
+}

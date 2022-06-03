@@ -29,13 +29,12 @@ void    ft_free_matrix(char ***out_adrr)
     {
         free(out_adrr[0]);
         *out_adrr = NULL;
-    }
-    
+    }   
 }
 
 char    **ft_dup_matrix(char **envp)
 {
-    printf("///**ft_dup_matrix\n");
+    printf("///ft_dup_Matrix\n");
     char    **out;
     int     nbr_rows;
     int     i;
@@ -64,7 +63,7 @@ char    **ft_dup_matrix(char **envp)
 
 char    **ft_extend_matrix(char **in_envp, char *new_str)
 {
-    printf("///Extand_Matrix\n");
+    printf("///ft_extand_Matrix\n");
     char    **out;
     int     len;
     int     i;
@@ -81,8 +80,6 @@ char    **ft_extend_matrix(char **in_envp, char *new_str)
     while (++i < len)
     {
         out[i] = ft_strdup(in_envp[i]);
-        printf("in_envp = %s\n", in_envp[i]);
-        printf("out = %s\n", out[i]);
         if (!out[i])
         {
             ft_free_matrix(&in_envp);
@@ -90,14 +87,14 @@ char    **ft_extend_matrix(char **in_envp, char *new_str)
         }
     }
     out[i] = ft_strdup(new_str);
-    printf("last out = %s\n", out[i]);
+    printf("last_out = %s\n", out[i]);
     ft_free_matrix(&in_envp);
     return (out);
 }
 
 char	**ft_matrix_replace_in(char ***big, char **small, int n)
 {
-    printf("///**ft_replace_matrix i = %d\n", n);
+    printf("///ft_replace_matrix i = %d\n", n);
 	char	**aux;
 	int		i[3];
 

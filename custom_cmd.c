@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-static void	update_output(char ***matrix, int fd)
+static void	update_output(char ***matrix, int fd) //**user
 {
-    printf("UP_DATE_OUTPUT\n");
+    printf("///UP_DATE_OUTPUT\n");
 	char	**aux;
 	char	*temp;
 	char	*line;
@@ -12,30 +12,27 @@ static void	update_output(char ***matrix, int fd)
 	while (1)
 	{
 		line = get_next_line(fd);
-        printf("line = %s\n", line);
 		if (!line)
 			break ;
 		temp = ft_strtrim(line, "\n");
 		free(line);
-        //printf("temp = %s\n", temp);
 		aux = ft_extend_matrix(aux, temp);
 		free(temp);
 	}
 	ft_free_matrix(matrix);
 	*matrix = aux;
-    printf("matrix[0] = %s\n", *matrix[0]);
-    //printf("matrix[1] = %s\n", *matrix[1]);
 }
 
-void	exec_custom(char ***out, char *full, char *args, char **envp)
+void	exec_custom(char ***out, char *full, char *args, char **envp) //**user
 {
-    printf("EXECUTE CMD ARG = %s\n", args);
+    printf("///EXECUTE_CMD = %s\n", args);
 	pid_t	pid;
 	int		fd[2];
 	char	**matrix;
 
 	pipe(fd);
 	pid = fork();
+	printf("pid = %i\n", pid);
 	if (!pid)
 	{
 		close(fd[READ_END]);

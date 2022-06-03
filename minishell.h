@@ -93,6 +93,8 @@ void	ft_lstadd_back(t_list **lst, t_list *newnode);
 t_list	*ft_lstnew(void *content);
 void	ft_lstclear(t_list **lst, void (*del)(void*));
 int	ft_lstsize(t_list *lst);
+int isEmptyList(t_list *lst);
+void    printList(t_list *lst);
 
 //get_params infile, outfile, full_path
 //int	get_fd(int oldfd, char *path, int flags[2]);
@@ -100,6 +102,9 @@ t_mini	*get_outfile1(t_mini *node, char **args, int *i);
 t_mini	*get_outfile2(t_mini *node, char **args, int *i);
 t_mini	*get_infile1(t_mini *node, char **args, int *i);
 t_mini	*get_infile2(t_mini *node, char **args, int *i);
+
+//builtin
+int	builtin(t_prompt *prompt, t_list *cmd, int *is_exit, int n);
 
 
 #endif

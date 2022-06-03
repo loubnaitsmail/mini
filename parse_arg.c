@@ -1,10 +1,10 @@
 #include "minishell.h"
 
-//extern int	g_status;
+extern int	g_status;
 
 static char	**split_all(char **args, t_prompt *prompt) //array_arg, prompt
 {
-    printf("///**split_all args\n");
+    printf("///SPLIT_ALL ARG\n");
 
 	char	**subsplit;
 	int		i;
@@ -13,27 +13,20 @@ static char	**split_all(char **args, t_prompt *prompt) //array_arg, prompt
 	i = -1;
 	while (args && args[++i])
 	{
-        printf(">>%d- While args split all = %s\n", i, args[i]);
+        printf("\n>> args %d = %s\n", i, args[i]);
 		args[i] = expand_vars(args[i], prompt); // $VAR
-        printf("Return_Var_Exp_args[%d] = %s\n\n", i, args[i]);
+        printf("Return_Var_Exp_args[%d] >> %s\n\n", i, args[i]);
 
 		args[i] = expand_path(args[i], -1, quotes, mini_getenv("HOME", prompt->envp, 4)); // ~/src
-        printf("Return_Path_Exp_args[%d] = %s\n\n", i, args[i]);
+        printf("Return_Path_Exp_args[%d] >> %s\n\n", i, args[i]);
 
-		subsplit = ft_cmdsubsplit(args[i], "<|>");
+		subsplit = ft_cmdsubsplit(args[i], "<|>"); //split
 
-		ft_matrix_replace_in(&args, subsplit, i);
-		
+		ft_matrix_replace_in(&args, subsplit, i); // if contient set <|>
 		i += ft_matrixlen(subsplit) - 1;
-        printf("i += matrixlen = %d\n", i);
-
 		ft_free_matrix(&subsplit);
 	}
-
-    //int j = -1;
-    //while(++j < 4)
-        //printf("Extanded args[%d] = %s\n", 0, args[0]);
-
+	printf("FINISH SPLIT\n\n");
 	return (args);
 }
 
@@ -44,10 +37,6 @@ static void	*parse_args(char **args, t_prompt *p) //array_args, prompt
 
 	is_exit = 0;
 	
-    //int j = -1;
-    //while(++j < 4)
-        //printf("Split_all args[%d] = %s\n", j, args[j]);
-
     p->cmds = fill_nodes(split_all(args, p), -1); //expand var and path and split "<|>", enlever les quotes et fill node
     
 	if (!p->cmds)
@@ -56,18 +45,11 @@ static void	*parse_args(char **args, t_prompt *p) //array_args, prompt
 	i = ft_lstsize(p->cmds);
 	printf("i_list_size = %d\n", i);
 
-	//g_status = builtin(p, p->cmds, &is_exit, 0);
-	/*while (i-- > 0)
-		waitpid(-1, &g_status, 0);
-	if (!is_exit && g_status == 13)
-		g_status = 0;
-	if (g_status > 255)
-		g_status = g_status / 255;
-	if (args && is_exit)
-	{
-		ft_lstclear(&p->cmds, free_content);
-		return (NULL);
-	}*/
+	g_status = builtin(p, p->cmds, &is_exit, 0);
+
+     ////.....   
+
+
 	return (p);
 }
 
@@ -97,12 +79,7 @@ void	*check_args(char *out, t_prompt *p) //out_readline //prompts
 
 	p = parse_args(a, p);
 
-	/*if (p && p->cmds)
-		n = p->cmds->content;
-	if (p && p->cmds && n && n->full_cmd && ft_lstsize(p->cmds) == 1)
-		p->envp = mini_setenv("_", n->full_cmd[ft_matrixlen(n->full_cmd) - 1], \
-			p->envp, 1);
-	if (p && p->cmds)
-		ft_lstclear(&p->cmds, free_content);*/
+	//......
+	
 	return (p);
 }
